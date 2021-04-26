@@ -1,0 +1,1 @@
+Bug #1 auth/login route returns token whether or not the username and password is in database, even if there is no password or username.

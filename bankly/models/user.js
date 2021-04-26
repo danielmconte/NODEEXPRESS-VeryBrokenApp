@@ -61,12 +61,13 @@ class User {
                 admin
             FROM users 
             WHERE username = $1`,
-      [username]
-    );
+      [username]);
 
     const user = result.rows[0];
-
-    if (user && (await bcrypt.compare(password, user.password))) {
+    console.log(password);
+    console.log(user.password);
+    console.log((await bcrypt.compare(password, user.password)))
+    if(user && (await bcrypt.compare(password, user.password))) {
       return user;
     } else {
       throw new ExpressError('Cannot authenticate', 401);
