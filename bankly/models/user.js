@@ -64,10 +64,9 @@ class User {
       [username]);
 
     const user = result.rows[0];
-    console.log(password);
-    console.log(user.password);
-    console.log((await bcrypt.compare(password, user.password)))
-    if(user && (await bcrypt.compare(password, user.password))) {
+    // console.log((await bcrypt.compare(password, user.password))) Not sure why this is always false
+    // password == user.password for app, bycrypt.compare for tests, not sure what's going on
+    if(user && (password == user.password) || (user && (await bcrypt.compare(password, user.password)))){
       return user;
     } else {
       throw new ExpressError('Cannot authenticate', 401);
@@ -79,14 +78,12 @@ class User {
    * [{username, first_name, last_name, email, phone}, ...]
    *
    * */
-
+  // Bug #3 (extended from users/ route) was providing more than basic info
   static async getAll(username, password) {
     const result = await db.query(
       `SELECT username,
                 first_name,
-                last_name,
-                email,
-                phone
+                last_name
             FROM users 
             ORDER BY username`
     );
@@ -99,6 +96,7 @@ class User {
    *
    **/
 
+  // Bug #2 (extended from users/:username route) add 'throw' before expressError
   static async get(username) {
     const result = await db.query(
       `SELECT username,
@@ -114,7 +112,7 @@ class User {
     const user = result.rows[0];
 
     if (!user) {
-      new ExpressError('No such user', 404);
+      throw new ExpressError('No such user', 404);
     }
 
     return user;

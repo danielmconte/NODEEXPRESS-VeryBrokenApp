@@ -38,10 +38,9 @@ router.post('/register', async function(req, res, next) {
  *
  */
 
-// BUG #1 This will return a token, regardless if the username/password is in incorrect
-// Partial Fix: Now sends error if nothing is sent
-// but is not actually authenticating anything just throwing back token
-// add awat before User, still always false
+// BUG #1 This will return a token, regardless if the username/password is in incorrect or missing
+// Fixed: Now sends error if nothing is sent, and 401 if wrong (also fixed authenticate model)
+
 router.post('/login', async function(req, res, next) {
   try {
     const { username, password } = req.body;

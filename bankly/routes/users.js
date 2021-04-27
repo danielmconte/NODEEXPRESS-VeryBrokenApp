@@ -14,7 +14,7 @@ const { authUser, requireLogin, requireAdmin } = require('../middleware/auth');
  *    {users: [{username, first_name, last_name}, ...]}
  *
  */
-
+// Bug #3 Was provided more than basic info, included phone and email
 router.get('/', authUser, requireLogin, async function(req, res, next) {
   try {
     let users = await User.getAll();
@@ -35,6 +35,7 @@ router.get('/', authUser, requireLogin, async function(req, res, next) {
  *
  */
 
+// Bug #2, does not return 404 but empty object (fixed in models)
 router.get('/:username', authUser, requireLogin, async function(
   req,
   res,
@@ -63,6 +64,7 @@ router.get('/:username', authUser, requireLogin, async function(
  *
  */
 
+// ??? having trouble testing this route
 router.patch('/:username', authUser, requireLogin, requireAdmin, async function(
   req,
   res,

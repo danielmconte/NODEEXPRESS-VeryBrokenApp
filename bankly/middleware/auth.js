@@ -44,12 +44,12 @@ function requireAdmin(req, res, next) {
  *
  **/
 
-// ?? Possible bug: use jwt.verify(req.body._token, SECRET_KEY); instead of decode
+// Bug #4: used jwt.verify(req.body._token, SECRET_KEY); instead of decode
 function authUser(req, res, next) {
   try {
     const token = req.body._token || req.query._token;
     if (token) {
-      let payload = jwt.decode(token);
+      let payload = jwt.verify(token, SECRET_KEY);
       req.curr_username = payload.username;
       req.curr_admin = payload.admin;
     }

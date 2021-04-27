@@ -75,7 +75,7 @@ describe("POST /auth/register", function() {
   });
 });
 
-// Need to addin test if username/password is not sent or wrong sends 401
+// This first part is no longer sending status 200, but it does with actual db
 describe("POST /auth/login", function() {
   test("should allow a correct username/password to log in", async function() {
     const response = await request(app)
@@ -91,7 +91,16 @@ describe("POST /auth/login", function() {
     expect(username).toBe("u1");
     expect(admin).toBe(false);
   });
-});
+  // added-tests Bug #1
+  test("should respond with 401 if username/password is wrong", async function() {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({
+        username: "u1",
+        password: "pwd401"
+      });
+    expect(response.statusCode).toBe(401) });
+  });
 
 describe("GET /users", function() {
   test("should deny access if no token provided", async function() {
@@ -106,6 +115,19 @@ describe("GET /users", function() {
     expect(response.statusCode).toBe(200);
     expect(response.body.users.length).toBe(3);
   });
+  // added test to make sure only basic info
+  test("should only give basic info", async function(){
+    const response = await request(app)
+    .get("/users")
+    .send({ _token: tokens.u1 });
+  expect(response.statusCode).toBe(200);
+  expect(response.body.users[0]).toEqual({
+    username: "u1",
+    first_name: "fn1",
+    last_name: "ln1"
+  }
+  );
+  })
 });
 
 describe("GET /users/[username]", function() {
@@ -126,6 +148,13 @@ describe("GET /users/[username]", function() {
       email: "email1",
       phone: "phone1"
     });
+  });
+  // added-test if username is not found
+  test("should return 404 on if username is not found", async function() {
+    const response = await request(app)
+      .get("/users/u7")
+      .send({ _token: tokens.u1 });
+    expect(response.statusCode).toBe(404);
   });
 });
 

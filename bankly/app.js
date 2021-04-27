@@ -35,4 +35,5 @@ app.use(function(err, req, res, next) {
 
 module.exports = app;
 
-module.exports = app;
+// Not sure this counts as bug, but this line was duplicated.
+// module.exports = app;
