@@ -100,7 +100,7 @@ function timeWord(time){
         amPM = " PM"
     }
     let theFullTime = theTime.concat(amPM);
-    console.log(theFullTime);
+    return theFullTime;
 }
 
 module.exports = {timeWord, minuteHelper, hourHelper};
